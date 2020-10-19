@@ -1,43 +1,4 @@
-from . import get_submodules_from_kwargs
-
-__all__ = ['load_model_weights']
-
-
-def _find_weights(model_name, dataset, include_top):
-    w = list(filter(lambda x: x['model'] == model_name, WEIGHTS_COLLECTION))
-    w = list(filter(lambda x: x['dataset'] == dataset, w))
-    w = list(filter(lambda x: x['include_top'] == include_top, w))
-    return w
-
-
-def load_model_weights(model, model_name, dataset, classes, include_top, **kwargs):
-    _, _, _, keras_utils = get_submodules_from_kwargs(kwargs)
-
-    weights = _find_weights(model_name, dataset, include_top)
-
-    if weights:
-        weights = weights[0]
-
-        if include_top and weights['classes'] != classes:
-            raise ValueError('If using `weights` and `include_top`'
-                             ' as true, `classes` should be {}'.format(weights['classes']))
-
-        weights_path = keras_utils.get_file(
-            weights['name'],
-            weights['url'],
-            cache_subdir='models',
-            md5_hash=weights['md5']
-        )
-
-        model.load_weights(weights_path)
-
-    else:
-        raise ValueError('There is no weights for such configuration: ' +
-                         'model = {}, dataset = {}, '.format(model.name, dataset) +
-                         'classes = {}, include_top = {}.'.format(classes, include_top))
-
-
-WEIGHTS_COLLECTION = [
+weights_collection = [
 
     # ResNet18
     {
@@ -56,7 +17,7 @@ WEIGHTS_COLLECTION = [
         'classes': 1000,
         'include_top': False,
         'url': 'https://github.com/qubvel/classification_models/releases/download/0.0.1/resnet18_imagenet_1000_no_top.h5',
-        'name': 'resnet18_imagenet_1000_no_top.h5',
+        'name': 'resnet18_imagenet_1000.h5',
         'md5': '318e3ac0cd98d51e917526c9f62f0b50',
     },
 
@@ -107,8 +68,8 @@ WEIGHTS_COLLECTION = [
         'dataset': 'imagenet11k-places365ch',
         'classes': 11586,
         'include_top': True,
-        'url': 'https://github.com/qubvel/classification_models/releases/download/0.0.1/resnet50_imagenet11k-places365ch_11586.h5',
-        'name': 'resnet50_imagenet11k-places365ch_11586.h5',
+        'url': 'https://github.com/qubvel/classification_models/releases/download/0.0.1/resnet50_places365_11586.h5',
+        'name': 'resnet50_places365_11586.h5',
         'md5': 'bb8963db145bc9906452b3d9c9917275',
     },
 
@@ -117,8 +78,8 @@ WEIGHTS_COLLECTION = [
         'dataset': 'imagenet11k-places365ch',
         'classes': 11586,
         'include_top': False,
-        'url': 'https://github.com/qubvel/classification_models/releases/download/0.0.1/resnet50_imagenet11k-places365ch_11586_no_top.h5',
-        'name': 'resnet50_imagenet11k-places365ch_11586_no_top.h5',
+        'url': 'https://github.com/qubvel/classification_models/releases/download/0.0.1/resnet50_imagenet_11586_no_top.h5',
+        'name': 'resnet50_imagenet_11586_no_top.h5',
         'md5': 'd8bf4e7ea082d9d43e37644da217324a',
     },
 
@@ -142,6 +103,7 @@ WEIGHTS_COLLECTION = [
         'name': 'resnet101_imagenet_1000_no_top.h5',
         'md5': '1016e7663980d5597a4e224d915c342d',
     },
+
 
     # ResNet152
     {
@@ -184,6 +146,7 @@ WEIGHTS_COLLECTION = [
         'md5': '25ab66dec217cb774a27d0f3659cafb3',
     },
 
+
     # ResNeXt50
     {
         'model': 'resnext50',
@@ -204,6 +167,7 @@ WEIGHTS_COLLECTION = [
         'name': 'resnext50_imagenet_1000_no_top.h5',
         'md5': '7ade5c8aac9194af79b1724229bdaa50',
     },
+
 
     # ResNeXt101
     {
